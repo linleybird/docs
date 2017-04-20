@@ -16,7 +16,7 @@ At the end of this guide you will have completed the following:
 ## Setup Postman
 
 1. Download [**Postman**](https://www.getpostman.com/)
-2. Download the **WhereIsMyTransport** [Postman **Collection**](PlatformCollection.json)
+2. Download the **WhereIsMyTransport** [Postman **Collection**](https://raw.githubusercontent.com/WhereIsMyTransport/docs/master/tapi/postman/PlatformCollection.json)
 3. Open Postman and Add the above **Collection** and **Environment** as follows:
 
     3.1 **Adding the Collection**
