@@ -777,7 +777,8 @@ A timetable of vehicles arriving and departing from a stop along their respectiv
 | :--------- | :--- | :---- |
 | arrivalTime | [DateTime](#datetime) | The arrival time of the vehicle at this stop along its route. |
 | departureTime | [DateTime](#datetime) | The departure time of the vehicle from this stop along its route. |
-| eventType | [EventType](#eventType) | The type of event at the stop, indicating whether it departs, arrives, or both.  |
+| departs | bool | Indicates if boarding is allowed.  False if the trip terminates at this location.  |
+| arrives | bool | Indicates if alighting is allowed.  False if the trip originates at this location.  |
 | vehicle | [Vehicle](#vehicle-response-model) | If available, identifying information for the vehicle running at this time. |
 | line | [Line](#line-response-model) | The line from which the vehicle is traveling. |
 
@@ -792,7 +793,7 @@ Retrieves a timetable for a stop, consisting of a list of occurrences of a vehic
 | id | [Identifier](#identifiers) | The identifier of the stop. |
 | earliestArrivalTime | [DateTime](#datetime) | The earliest arrival date and time to include in the timetable, inclusive. Defaults to now.  |
 | latestArrivalTime | [DateTime](#datetime) | The lastest arrival date and time to include in the timetable, exclusive. Defaults to earliestArrivalTime plus 7 days. |
-| eventType | [EventType](#eventType) | Specifies whether only arrivals or departures are required.  Default is ArrivalAndDeparture. |
+| eventType | [EventType](#eventType) | If specified, filter whether only arrivals or departures are returned.  By default returns either. |
 | exclude | string | A string of comma-separated object or collection names to [exclude](#excluding-data) from the response. |
 | limit | integer | See [Pagination](#pagination). The default is 10. |
 | offset | integer | See [Pagination](#pagination). The default is 0. |
@@ -801,11 +802,9 @@ Retrieves a timetable for a stop, consisting of a list of occurrences of a vehic
 
 Event type can either be **Departure**, **Arrival** or **ArrivalAndDeparture**.
 
-**Departure** indicates that only boarding is allowed.
+**Departure** specifies that departing timetables are returned.
 
-**Arrival** indicates that only alighting is allowed.
-
-**ArrivalAndDeparture** indicates that both boarding and alighting for the trip may happen.
+**Arrival** specifies that arriving timetables are returned.
 
 ##### Sample request
 
@@ -823,7 +822,8 @@ This request will retrieve timetable information for stop with identifier **eBTe
     {
         "arrivalTime": "2016-08-29T14:54:00Z",
         "departureTime": "2016-08-29T14:54:00Z",
-        "eventType": "ArrivalAndDeparture",
+        "departs": true,
+        "arrives": true,
         "vehicle": {},
         "line": {
             "id": "vBk_jw2saU-gfZCgo_JvLg",
@@ -843,7 +843,8 @@ This request will retrieve timetable information for stop with identifier **eBTe
     {
         "arrivalTime": "2016-08-29T15:03:00Z",
         "departureTime": "2016-08-29T15:03:00Z",
-        "eventType": "ArrivalAndDeparture",
+        "departs": true,
+        "arrives": true,
         "vehicle": {},
         "line": {
             "id": "vBk_jw2saU-gfZCgo_JvLg",
