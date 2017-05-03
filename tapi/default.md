@@ -156,11 +156,11 @@ A **401 Unauthorized** [status code](#http-status-codes) will be returned if the
 
 #### Token expiry
 
-The token response model will also contain a field called **expires_in**. This field denotes how long the token will be fresh since the token was issued (in seconds). After this period elapses that very token will become stale, and a new token will need to be retreived from the security token endpoint. 
+The token response model will also contain a field called **expires_in**. This field denotes how long the token will be fresh since the token was issued (in seconds). After this period elapses that very token will become stale, and a new token will need to be retreived from the security token endpoint.
 
 ### Errors
 
-The API uses conventional HTTP [status code](#http-status-codes) to indicate the result of a request. Codes within the 200s indicate that the request was successful. Codes within the 400s indicate that the request was somehow badly formed (such as a missing or incorrectly formatted field). 500s are typically returned when something unexpected goes wrong on the server. 
+The API uses conventional HTTP [status code](#http-status-codes) to indicate the result of a request. Codes within the 200s indicate that the request was successful. Codes within the 400s indicate that the request was somehow badly formed (such as a missing or incorrectly formatted field). 500s are typically returned when something unexpected goes wrong on the server.
 
 The **error response model** below will be returned for any error.
 
@@ -777,6 +777,7 @@ A timetable of vehicles arriving and departing from a stop along their respectiv
 | :--------- | :--- | :---- |
 | arrivalTime | [DateTime](#datetime) | The arrival time of the vehicle at this stop along its route. |
 | departureTime | [DateTime](#datetime) | The departure time of the vehicle from this stop along its route. |
+| eventType | [EventType](#eventType) | The type of event at the stop, indicating whether it departs, arrives, or both.  |
 | vehicle | [Vehicle](#vehicle-response-model) | If available, identifying information for the vehicle running at this time. |
 | line | [Line](#line-response-model) | The line from which the vehicle is traveling. |
 
@@ -791,9 +792,20 @@ Retrieves a timetable for a stop, consisting of a list of occurrences of a vehic
 | id | [Identifier](#identifiers) | The identifier of the stop. |
 | earliestArrivalTime | [DateTime](#datetime) | The earliest arrival date and time to include in the timetable, inclusive. Defaults to now.  |
 | latestArrivalTime | [DateTime](#datetime) | The lastest arrival date and time to include in the timetable, exclusive. Defaults to earliestArrivalTime plus 7 days. |
+| eventType | [EventType](#eventType) | Specifies whether only arrivals or departures are required.  Default is ArrivalAndDeparture. |
 | exclude | string | A string of comma-separated object or collection names to [exclude](#excluding-data) from the response. |
 | limit | integer | See [Pagination](#pagination). The default is 10. |
 | offset | integer | See [Pagination](#pagination). The default is 0. |
+
+#### EventType
+
+Event type can either be **Departure**, **Arrival** or **ArrivalAndDeparture**.
+
+**Departure** indicates that only boarding is allowed.
+
+**Arrival** indicates that only alighting is allowed.
+
+**ArrivalAndDeparture** indicates that both boarding and alighting for the trip may happen.
 
 ##### Sample request
 
@@ -811,6 +823,7 @@ This request will retrieve timetable information for stop with identifier **eBTe
     {
         "arrivalTime": "2016-08-29T14:54:00Z",
         "departureTime": "2016-08-29T14:54:00Z",
+        "eventType": "ArrivalAndDeparture",
         "vehicle": {},
         "line": {
             "id": "vBk_jw2saU-gfZCgo_JvLg",
@@ -830,6 +843,7 @@ This request will retrieve timetable information for stop with identifier **eBTe
     {
         "arrivalTime": "2016-08-29T15:03:00Z",
         "departureTime": "2016-08-29T15:03:00Z",
+        "eventType": "ArrivalAndDeparture",
         "vehicle": {},
         "line": {
             "id": "vBk_jw2saU-gfZCgo_JvLg",
