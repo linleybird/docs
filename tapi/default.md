@@ -786,7 +786,7 @@ A timetable of vehicles arriving and departing from a stop along their respectiv
 
 Retrieves a timetable for a stop, consisting of a list of occurrences of a vehicle calling at this stop in order of arrival time.
 
-`GET api/stops/{id}/timetables?earliestArrivalTime={DateTime}&latestArrivalTime={DateTime}limit={int}&offset={int}`
+`GET api/stops/{id}/timetables?earliestArrivalTime={DateTime}&latestArrivalTime={DateTime}&eventType={EventType}&limit={int}&offset={int}`
 
 | Parameter | Type | Description |
 | :-------------- | :--- | :---- |
