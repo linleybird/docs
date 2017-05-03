@@ -777,8 +777,8 @@ A timetable of vehicles arriving and departing from a stop along their respectiv
 | :--------- | :--- | :---- |
 | arrivalTime | [DateTime](#datetime) | The arrival time of the vehicle at this stop along its route. |
 | departureTime | [DateTime](#datetime) | The departure time of the vehicle from this stop along its route. |
-| departs | bool | Indicates if boarding is allowed.  False if the trip terminates at this location.  |
-| arrives | bool | Indicates if alighting is allowed.  False if the trip originates at this location.  |
+| departs | bool | Indicates if boarding is allowed.  Always false if the trip terminates at this location.  |
+| arrives | bool | Indicates if alighting is allowed.  Always false if the trip originates at this location.  |
 | vehicle | [Vehicle](#vehicle-response-model) | If available, identifying information for the vehicle running at this time. |
 | line | [Line](#line-response-model) | The line from which the vehicle is traveling. |
 
@@ -800,7 +800,7 @@ Retrieves a timetable for a stop, consisting of a list of occurrences of a vehic
 
 #### EventType
 
-Event type can either be **Departure**, **Arrival** or **ArrivalAndDeparture**.
+Event type can either be **Departure** or **Arrival**.
 
 **Departure** specifies that departing timetables are returned.
 
