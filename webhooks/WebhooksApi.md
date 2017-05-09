@@ -17,7 +17,7 @@ not appear in the channel list when sending messages. Only once a channel has be
 will it appear to messenger users. To create a channel webhook, you need the name of the target channel - this channel must
 to already exist.
 
-To create a channel webhook, `POST` the following body to `api/messenger/channels/{channelName}/`:
+To create a channel webhook, `POST` the following body to `api/messenger/{tenantId}/channels/{channelName}/`:
 ```JSON
 {
     "callbackUrl":"{callbackUrl}",
@@ -27,7 +27,9 @@ To create a channel webhook, `POST` the following body to `api/messenger/channel
 }
 ```    
 All webhooks have the choice to receive posts in one of two formats: JSON or the [protocol buffer format](https://github.com/google/protobuf/). The JSON format is 
-simply an alternative serialization of the .proto file. 
+simply an alternative serialization of the .proto file. +
+
+You can get the tenant id by pasting in your token into jwt.io. 
 
 Messages from channel webhooks follow the GTFS-R specificiation, however the schema file has been slightly modified to support
 proto3. You can download the proto schema in question [here](./gtfs-realtime.proto). The root element is the `FeedMessage`
@@ -43,16 +45,16 @@ request should be ignored. The webhooks API expects a 2XX response back to compl
 Once this handshake is complete, a `201 CREATED` response is returned to the client requesting webhook creation. The body 
 contains the webhook ID, which is necessary to delete the resource (Performed through a `DELETE` request, the path being the original endpoint with the webhook ID tacked onto the end; `{originalPath}/{webhookId}`)
 
-Now that the webhook is created, whenever an alert is received which should be sent to the target channel, the webhook API 
+Now that the webhook is created, whenever an incident is created which should be sent to the target channel, the webhook API 
 makes a `POST` request to the callbackUrl, the body is the message formatted as either a JSON string or a protocol buffer byte stream.
 The header contains the `x-hook-signature` field. This field contains a base64 encoded `HMAC-SHA256` hash of the body bytes (the JSON body is UTF8 encoded).
 The key of this hash is the `x-hook-secret`. Only if the hash matches, should the user accept the message.
 
-To update your webhook `PUT` the updated body to `api/messenger/channels/{channelName}/{webhookId}`
+To update your webhook `PUT` the updated body to `api/messenger/{tenantId}/channels/{channelName}/{webhookId}`
 
 
-If you do not have privileged access to an agency's messenger account, or if you wish to receive all service alerts in the network, 
-make a `POST` request to `api/alerts` with the following body (which is the same as previous body):
+If you do not have privileged access to an agency's messenger account, or if you wish to receive all service incidents in the network, 
+make a `POST` request to `api/incidents` with the following body (which is the same as previous body):
 
 ```JSON
 {
