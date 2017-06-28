@@ -80,7 +80,7 @@ Each request using the WhereIsMyTransport API uses data at different rates. Data
 |Querying a [stop timetable](#agencies) or a [line timetable](#line-timetable)|1|
 |Retrieving an  existing journey or part thereof ([itineraries](#itineraries), [legs](#legs), [geometry](#geometry), etc.)|1|
 
-By default, your team has a rolling daily limit of 100API Credits. If this limit is exceeded you will need to wait before making any further calls using our API.
+By default, your team has a rolling daily limit of 100 API Credits. If this limit is exceeded you will need to wait before making any further calls using our API.
 
 To remove your team's daily limit reach out to us on <a href="mailto:support@whereismytransport.com">support@whereismytransport.com</a> and let us know what you're developing. We're commited to supporting you throughout your journey.
 
