@@ -75,14 +75,14 @@ Each request using the WhereIsMyTransport API uses data at different rates. Data
 
 |API Request Type| Credits Used|
 |:---------------|:------------|
-|Querying transit entities ([agencies](), [stops](), [lines](), [fare products]()). This includes all advanced filtering features (such as spatial querying).|1|
-|Creating a [journey]().|5|
-|Querying a [stop timetable]() or a [line timetable]()|1|
-|Retrieving an  existing journey or part thereof ([itineraries]()[legs](), [geometry](), etc.)|1|
+|Querying transit entities ([agencies](#agencies), [stops](#stops), [lines](#lines), [fare products](#fare-products)). This includes all advanced filtering features (such as spatial querying)|1|
+|Creating a [journey](#journey)|5|
+|Querying a [stop timetable](#agencies) or a [line timetable](#line-timetable)|1|
+|Retrieving an  existing journey or part thereof ([itineraries](#itineraries), [legs](#legs), [geometry](#geometry), etc.)|1|
 
 By default, your team has a rolling daily limit of 100API Credits. If this limit is exceeded you will need to wait before making any further calls using our API.
 
-To remove your team's daily limit reach out to us on [support@whereismytransport.com](mailto:support@whereismytransport.com) and let us know what you're developing. We're commited to supporting you throughout your journey.
+To remove your team's daily limit reach out to us on <a href="mailto:support@whereismytransport.com">support@whereismytransport.com</a> and let us know what you're developing. We're commited to supporting you throughout your journey.
 
 #### Rate Limiting
 
