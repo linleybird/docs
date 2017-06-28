@@ -69,6 +69,21 @@ The API compresses response data using GZIP compression as defined by the HTTP 1
 
 **Note:** No other methods of compression are supported. Request compression is not supported.
 
+#### API Credits
+
+Each request using the WhereIsMyTransport API uses data at different rates. Data usage is determined using our API Credit system and is calculated as follows:
+
+|API Request Type| Credits Used|
+|:---------------|:------------|
+|Querying transit entities ([agencies](), [stops](), [lines](), [fare products]()). This includes all advanced filtering features (such as spatial querying).|1|
+|Creating a [journey]().|5|
+|Querying a [stop timetable]() or a [line timetable]()|1|
+|Retrieving an  existing journey or part thereof ([itineraries]()[legs](), [geometry](), etc.)|1|
+
+By default, your team has a rolling daily limit of 100API Credits. If this limit is exceeded you will need to wait before making any further calls using our API.
+
+To remove your team's daily limit reach out to us on [support@whereismytransport.com](mailto:support@whereismytransport.com) and let us know what you're developing. We're commited to supporting you throughout your journey.
+
 #### Rate Limiting
 
 The API enforces rate limits to help fairly distribute resources and protect against bursts of traffic. The API supplies the `X-Rate-Limit-*` headers for all successful requests which describe the current rate limit state.
