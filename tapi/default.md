@@ -435,7 +435,7 @@ An alert is a message that may indicate a wide variety of effects affecting serv
 | Field | Type | Description |
 | :--------- | :--- | :---- |
 | message | string | Text describing the alert. |
-| effect | [Alert Effect](#AlertEffect) | The effect this alert represents on the service. |
+| effect | [AlertEffect](#AlertEffect) | The effect this alert represents on the service. |
 
 ##### AlertEffects
 
@@ -447,10 +447,7 @@ Type of effect. The following table describes the alert effects currently suppor
 | ReducedService | Service running at lowered capacity. |
 | SignificantDelays | Service running but with substantial delays expected.  |
 | Detour | Service running on alternative routes to avoid problem. |
-| AdditionalService | Service above normal capacity. |
-| ModifiedService | Service different from normal capacity. |
 | OtherEffect | Miscellaneous, undefined effect. |
-| StopMoved | Stop not at previous location or stop no longer on route. |
 
 #### Retrieving agencies
 
@@ -487,7 +484,7 @@ GET api/agencies?bbox=-33.93901,18.39801,-33.92101,18.44301
         "alerts":
         [
            {
-              "message": "Heavy traffic causing significant delays of 20m on N2 Freeway.",
+              "message": "All vehicles are delayed by approx 20 mins from 15:25 due to a technical problem.",
               "effect": "SignificantDelays"
            }
         ]
