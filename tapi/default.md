@@ -156,11 +156,11 @@ A **401 Unauthorized** [status code](#http-status-codes) will be returned if the
 
 #### Token expiry
 
-The token response model will also contain a field called **expires_in**. This field denotes how long the token will be fresh since the token was issued (in seconds). After this period elapses that very token will become stale, and a new token will need to be retreived from the security token endpoint. 
+The token response model will also contain a field called **expires_in**. This field denotes how long the token will be fresh since the token was issued (in seconds). After this period elapses that very token will become stale, and a new token will need to be retreived from the security token endpoint.
 
 ### Errors
 
-The API uses conventional HTTP [status code](#http-status-codes) to indicate the result of a request. Codes within the 200s indicate that the request was successful. Codes within the 400s indicate that the request was somehow badly formed (such as a missing or incorrectly formatted field). 500s are typically returned when something unexpected goes wrong on the server. 
+The API uses conventional HTTP [status code](#http-status-codes) to indicate the result of a request. Codes within the 200s indicate that the request was successful. Codes within the 400s indicate that the request was somehow badly formed (such as a missing or incorrectly formatted field). 500s are typically returned when something unexpected goes wrong on the server.
 
 The **error response model** below will be returned for any error.
 
@@ -424,7 +424,33 @@ An agency, or operator, is an organisation which provides and governs a transpor
 | name | string | The full name of the agency. |
 | culture | string | The name of the [culture](#culture), based on RFC 4646. |
 | description | string | A brief description of the agency or how it operates, if available.  |
+| alerts | Array of [Alert](#alert) | All service alerts currently active for the agency. |
 
+#### Alerts
+
+An alert is a message that may indicate a wide variety of effects affecting service.
+
+##### Alert response model
+
+| Field | Type | Description |
+| :--------- | :--- | :---- |
+| message | string | Text describing the alert. |
+| effect | [Alert Effect](#AlertEffect) | The effect this alert represents on the service. |
+
+##### AlertEffects
+
+Type of effect. The following table describes the alert effects currently supported by the API.
+
+| Value | Description |
+| :--------- | :---- |
+| NoService | Service suspended. |
+| ReducedService | Service running at lowered capacity. |
+| SignificantDelays | Service running but with substantial delays expected.  |
+| Detour | Service running on alternative routes to avoid problem. |
+| AdditionalService | Service above normal capacity. |
+| ModifiedService | Service different from normal capacity. |
+| OtherEffect | Miscellaneous, undefined effect. |
+| StopMoved | Stop not at previous location or stop no longer on route. |
 
 #### Retrieving agencies
 
@@ -457,7 +483,14 @@ GET api/agencies?bbox=-33.93901,18.39801,-33.92101,18.44301
         "id":"CVVPBFb_v0KzC6cFAJGOkw",
         "href":"https://platform.whereismytransport.com/api/agencies/CVVPBFb_v0KzC6cFAJGOkw",
         "name":"Cape Town Taxi",
-        "culture":"en"
+        "culture":"en",
+        "alerts":
+        [
+           {
+              "message": "Heavy traffic causing significant delays of 20m on N2 Freeway.",
+              "effect": "SignificantDelays"
+           }
+        ]
     },
     {
         "id":"xp_eNbqkYEaZP2YZkHwQqg",
