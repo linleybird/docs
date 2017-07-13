@@ -446,7 +446,6 @@ Type of effect. The following table describes the alert effects currently suppor
 | NoService | Service suspended. |
 | ReducedService | Service running at lowered capacity. |
 | SignificantDelays | Service running but with substantial delays expected.  |
-| Detour | Service running on alternative routes to avoid problem. |
 | OtherEffect | Miscellaneous, undefined effect. |
 
 #### Retrieving agencies
@@ -484,7 +483,7 @@ GET api/agencies?bbox=-33.93901,18.39801,-33.92101,18.44301
         "alerts":
         [
            {
-              "message": "All vehicles are delayed by approx 20 mins from 15:25 due to a technical problem.",
+              "message": "All vehicles are delayed by approx 20 mins from 15:25 due to a strike.",
               "effect": "SignificantDelays"
            }
         ]
