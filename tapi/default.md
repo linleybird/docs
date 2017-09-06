@@ -71,26 +71,7 @@ The API compresses response data using GZIP compression as defined by the HTTP 1
 
 #### Rate Limiting
 
-The API enforces rate limits to help fairly distribute resources and protect against bursts of traffic. The API supplies the `X-Rate-Limit-*` headers for all successful requests which describe the current rate limit state.
-
-| Header | Type | Description |
-| :--------- | :--- | :---- |
-| X-Rate-Limit-Limit | string | Request limit timespan. |
-| X-Rate-Limit-Remaining | integer | Number of requests left in the rate limit window. |
-| X-Rate-Limit-Reset | [DateTime](#datetime) | Date and time when the rate limit will reset. |
-
-**Note:** Rate limited responses do not contain the `X-Rate-Limit-*` headers.
-
-##### Sample response
-
-```
-Content-Type: application/json
-X-Rate-Limit-Limit: 1s
-X-Rate-Limit-Remaining: 49
-X-Rate-Limit-Reset: 2016-08-30T10:31:15.8791107Z
-```
-
-HTTP responses will return a `429 Forbidden` status code for any rate limited request until the rate limit has dropped below the required threshold. The remaining seconds until the rate limit is reset is shown in the `Retry-After` response header.
+The API enforces rate limits to help fairly distribute resources and protect against bursts of traffic. HTTP responses will return a `429 Forbidden` status code for any request until the rate limit has dropped below the required threshold.
 
 ##### Sample response
 
@@ -99,7 +80,7 @@ HTTP responses will return a `429 Forbidden` status code for any rate limited re
 Content-Type: application/json
 Retry-After: 53
 {
-    "message": "Quota has been reached."
+    "message": "IP Rate limiting has been reached."
 }
 ```
 
