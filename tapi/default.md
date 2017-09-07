@@ -81,7 +81,7 @@ The API also enforces per-second rate limits based on IP to help fairly distribu
 429 Too Many Requests
 Content-Type: application/json
 {
-    "message": "API quota has been reached.  To discuss increasing your daily API credits, get in touch on support@whereismytransport.com."
+    "message": "API quota has been reached. To discuss increasing your daily API credits, get in touch on support@whereismytransport.com."
 }
 ```
 
