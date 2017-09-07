@@ -71,16 +71,17 @@ The API compresses response data using GZIP compression as defined by the HTTP 1
 
 #### Rate Limiting
 
-The API enforces rate limits to help fairly distribute resources and protect against bursts of traffic. HTTP responses will return a `429 Forbidden` status code for any request until the rate limit has dropped below the required threshold.
+Users have a rolling daily limit of calls to the API, as detailed in our [API License](https://www.whereismytransport.com/api-licence-agreement). By default, users have a rolling daily limit of 100 API calls. If this limit is exceeded in a given 24 hour period, HTTP responses will return a `429 Too Many Requests` status code and you will need to wait before making any further calls. To discuss increasing your limit, get in touch on <support@whereismytransport.com> and let us know what you're developing. We're committed to supporting you throughout your journey.
+
+The API also enforces per-second rate limits based on IP to help fairly distribute resources and protect against bursts of traffic. In this case, the response will return the message "IP Rate limiting has been reached."
 
 ##### Sample response
 
 ```json
-429 Unknown
+429 Too Many Requests
 Content-Type: application/json
-Retry-After: 53
 {
-    "message": "IP Rate limiting has been reached."
+    "message": "API quota has been reached.  To discuss increasing your daily API credits, get in touch on support@whereismytransport.com."
 }
 ```
 
