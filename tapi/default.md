@@ -701,7 +701,6 @@ This request will retrieve all child stops of the stop with identifier **E8qYuZ4
                 ]
             },
             "modes": [
-                "Bus",
                 "Bus"
             ]
         }
@@ -741,7 +740,6 @@ This request will retrieve all child stops of the stop with identifier **E8qYuZ4
                 ]
             },
             "modes": [
-                "Bus",
                 "Bus"
             ]
         }
