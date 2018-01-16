@@ -1516,6 +1516,7 @@ This request will exclude unneeded information on all contained stop, line and f
 #### Retrieving a specific itinerary
 
 To retrieve a specific itinerary for a previously created journey, the following resource can be requested.
+Note that a GET request for any journey or it's itineraries is only valid for up to 30 days.
 
 `GET api/journeys/{journeyId}/itineraries/{itineraryId}`
 
