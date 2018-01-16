@@ -1565,54 +1565,6 @@ An _Estimated_ leg is one where the given times are an estimate based on the pro
 | directions | Array of [Direction](#direction-response-model) | **[**[Excludable](#excluding-data)**]** If available, the directions to take in order to complete the leg. |
 | geometry | [GeoJSON](#geojson) LineString | **[**[Excludable](#excluding-data)**]** If available, the geographic shape of the leg. |
 
-#### Retrieving a specific leg
-
-##### Sample request
-
-Retrieving an itinerary's leg can be done using the index of that leg as it exists in the itinerary. The index begins counting from 1.
-
-```
-GET api/journeys/PEP5VsjJ6kuo6KZxAQjq2Q/itineraries/5CxmV36Blk6n6qZxAQjrdQ/legs/2?exclude=stop,line,geometry,directions
-```
-
-##### Sample response
-
-```json
-200 Ok
-{
-    "href": "https://platform.whereismytransport.com/api/journeys/PEP5VsjJ6kuo6KZxAQjq2Q/itineraries/5CxmV36Blk6n6qZxAQjrdQ/legs/2",
-    "type": "Transit",
-    "behaviour": "Static",
-    "distance": {
-        "value": 8554,
-        "unit": "m"
-    },
-    "duration": 1200,
-    "line": {
-        "id": "yGZHGrc3sUOhNFLoer-Z_g",
-        "href": "https://platform.whereismytransport.com/api/lines/yGZHGrc3sUOhNFLoer-Z_g"
-    },
-    "vehicle": {},
-    "waypoints": [
-        {
-            "stop": {
-                "id": "McWcQewKAUCZbluWHQk5kQ",
-                "href": "https://platform.whereismytransport.com/api/stops/McWcQewKAUCZbluWHQk5kQ"
-            },
-            "arrivalTime": "2016-08-29T17:00:00Z",
-            "departureTime": "2016-08-29T17:00:00Z"
-        },
-        {
-            "stop": {
-                "id": "C5UPegWudUa0h8LSSsVvrg",
-                "href": "https://platform.whereismytransport.com/api/stops/C5UPegWudUa0h8LSSsVvrg"
-            },
-            "arrivalTime": "2016-08-29T17:20:00Z",
-            "departureTime": "2016-08-29T17:20:00Z"
-        }
-    ]
-}
-```
 
 #### Pickup and Drop Off Type
 
