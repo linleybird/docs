@@ -1516,7 +1516,8 @@ This request will exclude unneeded information on all contained stop, line and f
 #### Retrieving a specific itinerary
 
 To retrieve a specific itinerary for a previously created journey, the following resource can be requested.
-Note that a GET request for any journey or it's itineraries is only valid for up to 30 days.
+
+**Note:** GET requests for any journey or its itineraries are only valid for up to 30 days. Requesting past this period will result in a **404 Not Found** [status code](https://developer.whereismytransport.com/documentation#http-status-codes).
 
 `GET api/journeys/{journeyId}/itineraries/{itineraryId}`
 
