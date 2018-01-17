@@ -1122,7 +1122,7 @@ A filter can be specified to explicitly use or omit certain agencies or modes fr
 | Field | Type | Description |
 | :--------- | :--- | :--- |
 | agencies | Array of [Identifier](#identifiers) | A list of agencies to use in or omit from the journey. |
-| modes | Array of [Mode](#mode) | A list of modes to use or omit in the journey. |
+| modes | Array of [Mode](#modes) | A list of modes to use or omit in the journey. |
 
 ##### Sample request
 
