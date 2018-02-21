@@ -50,7 +50,7 @@ To do this you need to do the following:
 2. Copy the *ClientId* and *ClientSecret* into the respective fields of the Postman environment.
     ![](devportal_client.png)
 
-3. The first API call in the collection allows you to retrieve an access token. When using the updated credentials, you should see a `200` `OK` response. The response body contains the a field named `access_token` whose value will be used in the `BearerToken` header when making requests to the API. But don't worry - this is done for you. At this point you are authenticated and can access our platform until the bearer token expires. Upon expiry, you will need to request another token.
+3. The first API call in the collection allows you to retrieve an access token. When using the updated credentials, you should see a `200` `OK` response. The response body contains the a field named `access_token` which represents the bearer token used to query the API. But don't worry - this will be filled in for you using a Postman macro. At this point you are authenticated and can access our platform until the bearer token expires. Upon expiry, you will need to request another token.
     ![](postman_5_token.png)
 
 4. To use the token for the other API calls, specify the token as a header with `Authorization: Bearer {token}`. For a complete set of the API's endpoints, please see the full [documentation](https://developer.whereismytransport.com/documentation). Below is an example of how to retrieve a list of agencies using the bearer token.
