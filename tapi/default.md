@@ -71,27 +71,19 @@ The API compresses response data using GZIP compression as defined by the HTTP 1
 
 #### Rate Limiting
 
-The API enforces rate limits to help fairly distribute resources and protect against bursts of traffic.
-HTTP responses will return a `429 Forbidden` status code for any request until the rate limit has dropped below the required threshold. The remaining seconds until the rate limit is reset is shown in the `Retry-After` response header.
+Users have a rolling daily limit of calls to the API, as detailed in our [API License](https://www.whereismytransport.com/api-licence-agreement). By default, this is set at 100 calls per rolling 24-hour period. If this limit is exceeded in a given 24 hour period, HTTP responses will return a `429 Too Many Requests` status code and you will need to wait before making any further calls. To discuss increasing your limit, get in touch on <support@whereismytransport.com> and let us know what you're developing. We're committed to supporting you throughout your journey.
+
+The API also enforces per-second rate limits based on IP to help fairly distribute resources and protect against bursts of traffic. In this case, the response will return the message "IP Rate limiting has been reached."
 
 ##### Sample response
 
 ```json
-429 Unknown
+429 Too Many Requests
 Content-Type: application/json
-Retry-After: 53
 {
-    "message": "Quota has been reached."
+    "message": "API quota has been reached. To discuss increasing your daily API credits, get in touch on support@whereismytransport.com."
 }
 ```
-
-The API also supplies the `X-Rate-Limit-*` headers for all requests and contain the current rate limit state.
-
-| Header | Description |
-| :--------- | :--- | :---- |
-| X-Rate-Limit-Limit | Total number of requests possible. |
-| X-Rate-Limit-Remaining | Number of requests left in the rate limit window. |
-| X-Rate-Limit-Reset | Timestamp when the rate limit will reset. |
 
 #### HTTPS
 
@@ -124,7 +116,7 @@ scope=transportapi:all
 
 ##### Sample response
 
-```
+```json
 201 Created
 {
     "access_token": "eyJ0eXAiOiJ32aQiLCJhbGciOiJSUzI1NiIsIfg1iCI6ImEzck1VZ01Gd8d0UGNsTGE2eUYz...",
@@ -150,7 +142,9 @@ The token response model will also contain a field called **expires_in**. This f
 
 ### Errors
 
-The API uses conventional HTTP [status code](#http-status-codes) to indicate the result of a request. Codes within the 200s indicate that the request was successful. Codes within the 400s indicate that the request was somehow badly formed (such as a missing or incorrectly formatted field). 500s are typically returned when something unexpected goes wrong on the server. The **error response model** below will be returned for any error.
+The API uses conventional HTTP [status code](#http-status-codes) to indicate the result of a request. Codes within the 200s indicate that the request was successful. Codes within the 400s indicate that the request was somehow badly formed (such as a missing or incorrectly formatted field). 500s are typically returned when something unexpected goes wrong on the server.
+
+The **error response model** below will be returned for any error.
 
 #### Error response model
 
@@ -161,7 +155,7 @@ The API uses conventional HTTP [status code](#http-status-codes) to indicate the
 
 ##### Sample response
 
-```
+```json
 400 Bad Request
 {
     "message": "The request has invalid or missing fields. Please visit our documentation.",
@@ -178,7 +172,7 @@ The API uses conventional HTTP [status code](#http-status-codes) to indicate the
 
 ### Identifiers
 
-Almost all entities in the API are identified through the use of a globally unique identifier. This identifier is specified as a 22 character long, case-sensitive string of URL-friendly characters; __a__ to __z__, __A__ to __Z__, __0__ to __9__, - (hyphen) and _ (underscore). See the **id** field in the sample response below.
+Almost all resources in the API are identified through the use of a globally unique identifier. This identifier is specified as a 22 character long, case-sensitive string of URL-friendly characters; __a__ to __z__, __A__ to __Z__, __0__ to __9__, - (hyphen) and _ (underscore). See the **id** field in the sample response below.
 
 ##### Sample request
 
@@ -188,7 +182,7 @@ GET api/agencies/5kcfZkKW0ku4Uk-A6j8MFA
 
 ##### Sample response
 
-```
+```json
 {
     "id": "5kcfZkKW0ku4Uk-A6j8MFA",
     "href": "https://platform.whereismytransport.com/api/agencies/5kcfZkKW0ku4Uk-A6j8MFA",
@@ -213,7 +207,7 @@ GET api/stops/eBTeYLPXOkWm5zyfjZVaZg
 
 ##### Sample response
 
-```
+```json
 200 Ok
 {
     "id": "eBTeYLPXOkWm5zyfjZVaZg",
@@ -228,8 +222,8 @@ GET api/stops/eBTeYLPXOkWm5zyfjZVaZg
     "geometry": {
         "type": "Point",
         "coordinates": [
-            18.424849,
-            -33.920555
+            18.42484,
+            -33.92055
         ]
     },
     "modes": [
@@ -253,7 +247,7 @@ When excluding resource objects, the containing object with their **id** and **h
 The request below will exclude **geometry** and **directions** from the response model.
 
 ```
-POST api/journeys/8GYKddjcAk6j7aVUAMV3pw?exclude=geometry,directions
+POST api/journeys?exclude=geometry,directions
 ```
 
 ### Understanding Scheduled Data
@@ -289,6 +283,8 @@ ISO 8601 date and time strings can be represented as "2016-11-19T07:22Z" (7:22 A
 
 More information can be found [here](https://en.wikipedia.org/wiki/ISO_8601).
 
+Acceptable DateTime input values are limited to between 1 day in the past and 6 days in the future. This allows the user to query on any day of the week, but it should be remembered that public holidays, schedule changes and daylight savings time changes might mean that results for the same day might differ from week to week. Supplying a DateTime that exceeds this limitation will result in a **400 Bad Request** [status code](#http-status-codes) response. In the case of a default that falls outside this limitation, the default will use the limitation value.
+
 **Note:** ISO 8601 dates are timezone-agnostic and so are communicated in UTC (Coordinated Universal Time).
 
 #### Culture
@@ -307,7 +303,7 @@ Monetary amounts are represented by the cost object, which is made up of an amou
 
 The following cost object represents the value of R10,50.
 
-```
+```json
 {
     "cost": {
         "amount": 10.5,
@@ -328,13 +324,13 @@ A typical GeoJSON structure consists of a **type** field and an array of **coord
 
 The following GeoJSON Point represents the coordinates for Cape Town's city centre.
 
-```
+```json
 {
     "geometry": {
         "type": "Point",
         "coordinates": [
-            18.417035,
-            -33.926852
+            18.41703,
+            -33.92685
         ]
     }
 }
@@ -347,7 +343,7 @@ In order to provide a geographic position through the query string, a comma-sepa
 ##### Sample request
 
 ```
-GET api/stops?point=-33.925430,18.436443&radius=1750
+GET api/stops?point=-33.92543,18.43644
 ```
 
 **Note: ** The ordering of these two coordinates is latitude first and then longitude.
@@ -359,7 +355,7 @@ In order to provide a geographic bounding box through the query string, a comma-
 ##### Sample request
 
 ```
-GET api/stops?bbox=-33.94,18.36,-33.89,18.43
+GET api/stops?bbox=-33.93943,18.39801,-33.92111,18.44301
 ```
 
 #### Distance
@@ -368,7 +364,7 @@ Distance is returned as an object consisting of the distance **value** (an integ
 
 ##### Sample response
 
-```
+```json
 {  
     "distance": {  
         "value": 133,
@@ -377,7 +373,7 @@ Distance is returned as an object consisting of the distance **value** (an integ
 }
 ```
 
-**Note:** The API currently only supports the metric system and distance is always returned in metres.
+**Note:** The API currently only supports the metric system and distance is currently returned in metres.
 
 ## Specification
 
@@ -386,17 +382,16 @@ Distance is returned as an object consisting of the distance **value** (an integ
 The mode of transport describes the type of vehicle that is used along a line. The following table describes the modes currently supported by the API.
 
 | Value | Description |
-| :--------- | :--- | :---- |
+| :--------- | :---- |
 | LightRail | A service for any light rail or street level system within a metropolitan area. |
 | Subway | An underground rail service. |
 | Rail | An overground railway transportation service. |
 | Bus | A bus service utilising a road network. |
 | Ferry | A boat service. |
-| GroundCableCar | A service for street level cable cars where the cable runs beneath the car. |
-| Gondola | An aerial cable car service. |
-| Funicular | A rail system service designed for steep inclines. |
 | Coach | A long distance bus service. |
-| Air | A service for any air travel. |
+| ShareTaxi | A service with vehicles typically smaller than buses operating on routes without timetables. |
+
+**Note:** New modes will be supported in the future and thus be added to this list. Unused modes may be removed over time. Be careful when parsing directly to an enum for modes of transport.
 
 ### Agencies
 
@@ -406,11 +401,12 @@ An agency, or operator, is an organisation which provides and governs a transpor
 
 | Field | Type | Description |
 | :--------- | :--- | :---- |
-| id | [identifier](#identifiers) | The identifier of the agency. |
-| href | [hyperlink](#resource-linking) | The hyperlink to this resource. |
+| id | [Identifier](#identifiers) | The identifier of the agency. |
+| href | [Hyperlink](#resource-linking) | The hyperlink to this resource. |
 | name | string | The full name of the agency. |
 | culture | string | The name of the [culture](#culture), based on RFC 4646. |
 | description | string | A brief description of the agency or how it operates, if available.  |
+
 
 #### Retrieving agencies
 
@@ -431,33 +427,31 @@ Retrieves a collection of agencies.
 ##### Sample request
 
 ```
-GET api/agencies?bbox=-33.94,18.36,-33.89,18.43
+GET api/agencies?bbox=-33.93901,18.39801,-33.92101,18.44301
 ```
 
 ##### Sample response
 
-```
+```json
 200 Ok
 [
     {
-        "id": "xp_eNbqkYEaZP2YZkHwQqg",
-        "href": "https://platform.whereismytransport.com/api/agencies/xp_eNbqkYEaZP2YZkHwQqg",
-        "name": "Metrorail Western Cape",
-        "culture": "en",
-        "description": "Urban railway system"
+        "id":"CVVPBFb_v0KzC6cFAJGOkw",
+        "href":"https://platform.whereismytransport.com/api/agencies/CVVPBFb_v0KzC6cFAJGOkw",
+        "name":"Cape Town Taxi",
+        "culture":"en"
     },
     {
-        "id": "5kcfZkKW0ku4Uk-A6j8MFA",
-        "href": "https://platform.whereismytransport.com/api/agencies/5kcfZkKW0ku4Uk-A6j8MFA",
-        "name": "MyCiTi",
-        "culture": "en",
-        "description" : "IRT Bus"
+        "id":"xp_eNbqkYEaZP2YZkHwQqg",
+        "href":"https://platform.whereismytransport.com/api/agencies/xp_eNbqkYEaZP2YZkHwQqg",
+        "name":"Metrorail Western Cape",
+        "culture":"en"
     },
     {
-        "id": "PO83DTm4oEuJ19prwicxHw",
-        "href": "https://platform.whereismytransport.com/api/agencies/PO83DTm4oEuJ19prwicxHw",
-        "name": "Nelson Mandela Gateway",
-        "culture": "en"
+        "id":"5kcfZkKW0ku4Uk-A6j8MFA",
+        "href":"https://platform.whereismytransport.com/api/agencies/5kcfZkKW0ku4Uk-A6j8MFA",
+        "name":"MyCiTi",
+        "culture":"en"
     }
 ]
 ```
@@ -480,14 +474,13 @@ GET api/agencies/5kcfZkKW0ku4Uk-A6j8MFA
 
 ##### Sample response
 
-```
+```json
 200 Ok
 {
     "id": "5kcfZkKW0ku4Uk-A6j8MFA",
     "href": "https://platform.whereismytransport.com/api/agencies/5kcfZkKW0ku4Uk-A6j8MFA",
     "name": "MyCiTi",
-    "culture": "en",
-    "description" : "IRT Bus"
+    "culture": "en"
 }
 ```
 
@@ -500,7 +493,7 @@ A location where passengers can board or alight from a transport vehicle.
 | Field | Type | Description |
 | :--------- | :--- | :---- |
 | id | [Identifier](#identifiers) | The identifier of the stop. |
-| href | [hyperlink](#resource-linking) | The hyperlink to this resource. |
+| href | [Hyperlink](#resource-linking) | The hyperlink to this resource. |
 | agency | [Agency](#agency-response-model) | **[**[Excludable](#excluding-data)**]** The agency. |
 | name | string | The full name of the stop. |
 | code | string | If available, the passenger code of the stop. |
@@ -518,8 +511,8 @@ Retrieves a collection of stops.
 | :-------------- | :--- | :---- |
 | point | [Point](#point) | The point from where to search for nearby stops. Stops will be returned in order of their distance from this point (from closest to furthest). |
 | radius | integer | The distance in metres from the point to search for nearby stops. This filter is optional. |
-| bbox | [BoundingBox](#boundingbox) | The bounding box from where to retrieve stops. This will be ignored if a point is provided in the query.  |
-| modes | string | A string of comma-separated [transport modes](#modes) to filter the results by. |
+| bbox | [BoundingBox](#boundingbox) | The bounding box within which to retrieve stops. This will be ignored if a point is provided in the query.  |
+| modes | Array of [Mode](#modes) | A string of comma-separated [transport modes](#modes) to filter the results by. |
 | agencies | Array of [Identifier](#identifiers) | A string of comma-separated agency identifiers to filter the results by. |
 | servesLines | Array of [Identifier](#identifiers) | A string of comma-separated line identifiers to filter the results by. |
 | showChildren | bool | Specifies whether or not to also return children stops. Default is false. |
@@ -530,14 +523,14 @@ Retrieves a collection of stops.
 ##### Sample request
 
 ```
-GET api/stops?agencies=5kcfZkKW0ku4Uk-A6j8MFA,xp_eNbqkYEaZP2YZkHwQqg&point=-33.923,18.421&radius=500
+GET api/stops?agencies=5kcfZkKW0ku4Uk-A6j8MFA,xp_eNbqkYEaZP2YZkHwQqg&point=-33.92301,18.42101&radius=500
 ```
 
 ##### Sample response
 
-This request will retrieve stops from either agency **5kcfZkKW0ku4Uk-A6j8MFA** or **xp_eNbqkYEaZP2YZkHwQqg** and which are within 500 meters of the point [-33.923, 18.421].
+This request will retrieve stops from either agency **5kcfZkKW0ku4Uk-A6j8MFA** or **xp_eNbqkYEaZP2YZkHwQqg** and which are within 500 metres of the point [-33.923, 18.421].
 
-```
+```json
 200 Ok
 [
     {
@@ -553,8 +546,8 @@ This request will retrieve stops from either agency **5kcfZkKW0ku4Uk-A6j8MFA** o
         "geometry": {
             "type": "Point",
             "coordinates": [
-                18.421188,
-                -33.923939
+                18.42118,
+                -33.92393
             ]
         },
         "modes": [
@@ -574,8 +567,8 @@ This request will retrieve stops from either agency **5kcfZkKW0ku4Uk-A6j8MFA** o
         "geometry": {
             "type": "Point",
             "coordinates": [
-                18.422529,
-                -33.92407
+                18.42252,
+                -33.92401
             ]
         },
         "modes": [
@@ -596,8 +589,8 @@ This request will retrieve stops from either agency **5kcfZkKW0ku4Uk-A6j8MFA** o
         "geometry": {
             "type": "Point",
             "coordinates": [
-                18.424846,
-                -33.922993
+                18.42484,
+                -33.92299
             ]
         },
         "modes": [
@@ -627,7 +620,7 @@ GET api/stops/eBTeYLPXOkWm5zyfjZVaZg?exclude=agency
 
 This request will retrieve the stop resource and exclude unneeded **agency** fields.
 
-```
+```json
 200 Ok
 {
     "id": "eBTeYLPXOkWm5zyfjZVaZg",
@@ -640,8 +633,8 @@ This request will retrieve the stop resource and exclude unneeded **agency** fie
     "geometry": {
         "type": "Point",
         "coordinates": [
-            18.424849,
-            -33.920555
+            18.42484,
+            -33.92055
         ]
     },
     "modes": [
@@ -670,7 +663,7 @@ GET api/stops/E8qYuZ4nEUSLS13pskx1Qg/stops
 
 This request will retrieve all child stops of the stop with identifier **E8qYuZ4nEUSLS13pskx1Qg**.
 
-```
+```json
 200 Ok
 [
     {
@@ -685,8 +678,8 @@ This request will retrieve all child stops of the stop with identifier **E8qYuZ4
         "geometry": {
             "type": "Point",
             "coordinates": [
-                18.503569,
-                -33.578148
+                18.50356,
+                -33.57814
             ]
         },
         "modes": [
@@ -703,12 +696,11 @@ This request will retrieve all child stops of the stop with identifier **E8qYuZ4
             "geometry": {
                 "type": "Point",
                 "coordinates": [
-                    18.503632,
-                    -33.578362
+                    18.50363,
+                    -33.57836
                 ]
             },
             "modes": [
-                "Bus",
                 "Bus"
             ]
         }
@@ -725,8 +717,8 @@ This request will retrieve all child stops of the stop with identifier **E8qYuZ4
         "geometry": {
             "type": "Point",
             "coordinates": [
-                18.503695,
-                -33.578577
+                18.50369,
+                -33.57857
             ]
         },
         "modes": [
@@ -743,12 +735,11 @@ This request will retrieve all child stops of the stop with identifier **E8qYuZ4
             "geometry": {
                 "type": "Point",
                 "coordinates": [
-                    18.503632,
-                    -33.578362
+                    18.50363,
+                    -33.57836
                 ]
             },
             "modes": [
-                "Bus",
                 "Bus"
             ]
         }
@@ -766,6 +757,8 @@ A timetable of vehicles arriving and departing from a stop along their respectiv
 | :--------- | :--- | :---- |
 | arrivalTime | [DateTime](#datetime) | The arrival time of the vehicle at this stop along its route. |
 | departureTime | [DateTime](#datetime) | The departure time of the vehicle from this stop along its route. |
+| departs | bool | Indicates if boarding is allowed.  Always false if the trip terminates at this location.  |
+| arrives | bool | Indicates if alighting is allowed.  Always false if the trip originates at this location.  |
 | vehicle | [Vehicle](#vehicle-response-model) | If available, identifying information for the vehicle running at this time. |
 | line | [Line](#line-response-model) | The line from which the vehicle is traveling. |
 
@@ -773,14 +766,25 @@ A timetable of vehicles arriving and departing from a stop along their respectiv
 
 Retrieves a timetable for a stop, consisting of a list of occurrences of a vehicle calling at this stop in order of arrival time.
 
-`GET api/stops/{id}/timetables?earliestArrivalTime={DateTime}&limit={int}`
+`GET api/stops/{id}/timetables?earliestArrivalTime={DateTime}&latestArrivalTime={DateTime}&eventType={EventType}&limit={int}&offset={int}`
 
 | Parameter | Type | Description |
 | :-------------- | :--- | :---- |
 | id | [Identifier](#identifiers) | The identifier of the stop. |
-| earliestArrivalTime | [DateTime](#datetime) | The earliest arrival date and time to include in the timetable. |
+| earliestArrivalTime | [DateTime](#datetime) | The earliest arrival date and time to include in the timetable, inclusive. Defaults to now.  |
+| latestArrivalTime | [DateTime](#datetime) | The lastest arrival date and time to include in the timetable, exclusive. Defaults to earliestArrivalTime plus 7 days. |
+| eventType | [EventType](#eventType) | If specified, filter whether only arrivals or departures are returned.  By default returns either. |
 | exclude | string | A string of comma-separated object or collection names to [exclude](#excluding-data) from the response. |
-| limit | integer | The maximum number of entities to be returned. Default is 10. |
+| limit | integer | See [Pagination](#pagination). The default is 10. |
+| offset | integer | See [Pagination](#pagination). The default is 0. |
+
+#### EventType
+
+Event type can either be **Departure** or **Arrival**.
+
+**Departure** specifies that departing timetables are returned.
+
+**Arrival** specifies that arriving timetables are returned.
 
 ##### Sample request
 
@@ -792,12 +796,14 @@ GET api/stops/eBTeYLPXOkWm5zyfjZVaZg/timetables?limit=2
 
 This request will retrieve timetable information for stop with identifier **eBTeYLPXOkWm5zyfjZVaZg**, limiting it to two items.
 
-```
+```json
 200 Ok
 [
     {
         "arrivalTime": "2016-08-29T14:54:00Z",
         "departureTime": "2016-08-29T14:54:00Z",
+        "departs": true,
+        "arrives": true,
         "vehicle": {},
         "line": {
             "id": "vBk_jw2saU-gfZCgo_JvLg",
@@ -817,6 +823,8 @@ This request will retrieve timetable information for stop with identifier **eBTe
     {
         "arrivalTime": "2016-08-29T15:03:00Z",
         "departureTime": "2016-08-29T15:03:00Z",
+        "departs": true,
+        "arrives": true,
         "vehicle": {},
         "line": {
             "id": "vBk_jw2saU-gfZCgo_JvLg",
@@ -845,7 +853,7 @@ A grouping together of routes marketed to passengers as a single section of the 
 | Field | Type | Description |
 | :--------- | :--- | :---- |
 | id | [Identifier](#identifiers) | The identifier of the line. |
-| href | [hyperlink](#resource-linking) | The hyperlink to this resource. |
+| href | [Hyperlink](#resource-linking) | The hyperlink to this resource. |
 | agency | [Agency](#agency-response-model) | **[**[Excludable](#excluding-data)**]** The line's agency. |
 | name | string | If available, the full name of the line, . Either **name** or **shortName** will exist. |
 | shortName | string | If available, the short name of the line. Either **name** or **shortName** will exist. |
@@ -862,6 +870,10 @@ Retrieves a collection of lines.
 
 | Parameter | Type | Description |
 | :-------------- | :--- | :---- |
+| point | [Point](#point) | The point from where to search for nearby lines. Lines will be returned in order of their distance from this point (from closest to furthest). |
+| radius | integer | The distance in metres from the point to search for nearby lines. This filter is optional. |
+| bbox | [BoundingBox](#boundingbox) | The bounding box within which to retrieve lines. This will be ignored if a point is provided in the query.  |
+| modes | Array of [Mode](#modes) | A string of comma-separated [transport modes](#modes) to filter the results by. |
 | agencies | Array of [Identifier](#identifiers) | A comma-separated list of agency identifiers to filter the results by. |
 | servesStops | Array of [Identifier](#identifiers) | A comma-separated list of stop identifiers that represent stops which the returned lines must serve. |
 | exclude | string | A string of comma-separated object or collection names to [exclude](#excluding-data) from the response. |
@@ -876,7 +888,7 @@ GET api/lines?agencies=5kcfZkKW0ku4Uk-A6j8MFA&limit=2
 
 ##### Sample response
 
-```
+```json
 200 Ok
 [
     {
@@ -928,7 +940,7 @@ GET api/lines/rBD_j-ZRdEiiHMc9lNzQtA
 
 ##### Sample response
 
-```
+```json
 200 Ok
 {
     "id": "rBD_j-ZRdEiiHMc9lNzQtA",
@@ -961,16 +973,18 @@ A timetable of vehicles travelling on a line.
 
 Retrieves a timetable for a line, consisting of a list of departures on this line in order of departure time.
 
-`GET api/lines/{id}/timetables?earliestDepartureTime={DateTime}&departureStopId={stop}&arrivalStopId={stop}&limit={int}`
+`GET api/lines/{id}/timetables?earliestDepartureTime={DateTime}&latestDepartureTime={DateTime}&departureStopId={stop}&arrivalStopId={stop}&limit={int}&offset={int}`
 
 | Parameter | Type | Notes |
 | :-------------- | :--- | :---- |
 | id | [Identifier](#identifiers) | The identifier of the line. |
-| earliestDepartureTime | [DateTime](#datetime) | Optional earliest departure time on that line to be included in the timetable. |
-| departureStopId | [Identifier](#identifiers) | Optional stop identifier - bounds results to only occur after this stop. |
-| arrivalStopId | [Identifier](#identifiers) | Optional stop identifier - bounds results to only occur before this stop. |
+| earliestDepartureTime | [DateTime](#datetime) | Earliest departure time for the trip (departure time from the first stop on that line) to be included in the timetable. Defaults to now. |
+| latestDepartureTime | [DateTime](#datetime) | Latest departure time for the trip (departure time from the first stop on that line) to be included in the timetable. Defaults to earliestDepartureTime plus 7 days. |
+| departureStopId | [Identifier](#identifiers) | Stop identifier that bounds results to only occur after this stop. |
+| arrivalStopId | [Identifier](#identifiers) | Stop identifier that bounds results to only occur before this stop. |
 | exclude | string | A string of comma-separated object or collection names to [exclude](#excluding-data) from the response. |
-| limit | integer | The maximum number of entities to be returned. Default is 10. |
+| limit | integer | See [Pagination](#pagination). The default is 10. |
+| offset | integer | See [Pagination](#pagination). The default is 0. |
 
 ##### Sample request
 
@@ -980,7 +994,7 @@ GET api/lines/rBD_j-ZRdEiiHMc9lNzQtA/timetables?departureStopId=fbJnFbrZ906L0_jC
 
 ##### Sample response
 
-```
+```json
 200 Ok
 [
     {
@@ -1057,7 +1071,7 @@ A journey is the traveling of a passenger from a departure point to an arrival p
 | Field | Type | Description |
 | :--------- | :--- | :---- |
 | id | [Identifier](#identifiers) | The identifier of the journey. |
-| href | [hyperlink](#resource-linking) | The hyperlink to this resource. |
+| href | [Hyperlink](#resource-linking) | The hyperlink to this resource. |
 | geometry | [GeoJSON](#geojson) MultiPoint | An ordered GeoJSON MultiPoint representing the departure and arrival points for the journey. |
 | time | [DateTime](#datetime) | The requested date and time for the journey.  |
 | timeType | [TimeType](#timetype) | Specifies whether this is an **ArriveBefore** or **DepartAfter** request. |
@@ -1076,8 +1090,8 @@ Creating a new journey is done by posting the journey's criteria to the resource
 
 | Field | Type | Required | Description |
 | :--------- | :--- | :--- | :---- |
-| geometry | [GeoJSON](#geojson) MultiPoint | Required | An ordered GeoJSON MultiPoint representing the departure and arrival points for the journey. Exactly two points must be provided. |
-| time | [DateTime](#datetime) | Optional | The requested date and time for the journey. Defaults to Now. |
+| geometry | [GeoJSON](#geojson) MultiPoint | Required | An ordered GeoJSON MultiPoint representing the departure and arrival points for the journey. Exactly two *different* points must be provided. Using the same points will result in an error. |
+| time | [DateTime](#datetime) | Optional | The requested date and time for the journey. Defaults to now. |
 | timeType | [TimeType](#timetype) | Optional | Specifies whether this is an ArriveBefore or DepartAfter request. Defaults to DepartAfter. |
 | profile | [Profile](#profile) | Required | The profile used to calculate and order itineraries. |
 | only | [Filter](#filter) | Optional | The explicit set of modes or agencies to use. If unset, all modes and agencies are used. |
@@ -1108,23 +1122,23 @@ A filter can be specified to explicitly use or omit certain agencies or modes fr
 | Field | Type | Description |
 | :--------- | :--- | :--- |
 | agencies | Array of [Identifier](#identifiers) | A list of agencies to use in or omit from the journey. |
-| modes | Array of [Mode](#mode) | A list of modes to use or omit in the journey. |
+| modes | Array of [Mode](#modes) | A list of modes to use or omit in the journey. |
 
 ##### Sample request
 
-```
+```json
 POST api/journeys?exclude=line,stop,fareProduct
 {
     "geometry": {
         "type": "Multipoint",
         "coordinates": [
             [
-                18.417,
-                -33.916
+                18.41701,
+                -33.91601
             ],
             [
-                18.412,
-                -33.908
+                18.41201,
+                -33.90801
             ]
         ]
     },
@@ -1143,7 +1157,7 @@ POST api/journeys?exclude=line,stop,fareProduct
 
 This request will exclude unneeded information on all contained stop, line and fare product resources in order to reduce the payload.
 
-```
+```json
 201 Created
 {
     "id": "uvRvS486sUODiqZyAK-j2g",
@@ -1152,12 +1166,12 @@ This request will exclude unneeded information on all contained stop, line and f
         "type": "MultiPoint",
         "coordinates": [
             [
-                18.417,
-                -33.916
+                18.41701,
+                -33.91601
             ],
             [
-                18.412,
-                -33.908
+                18.41201,
+                -33.90801
             ]
         ]
     },
@@ -1204,8 +1218,8 @@ This request will exclude unneeded information on all contained stop, line and f
                                 "geometry": {
                                     "type": "Point",
                                     "coordinates": [
-                                        18.417,
-                                        -33.916
+                                        18.41701,
+                                        -33.91601
                                     ]
                                 }
                             },
@@ -1225,20 +1239,20 @@ This request will exclude unneeded information on all contained stop, line and f
                         "type": "LineString",
                         "coordinates": [
                             [
-                                18.416975,
-                                -33.916008
+                                18.41697,
+                                -33.91600
                             ],
                             [
-                                18.417094,
-                                -33.916252
+                                18.41709,
+                                -33.91625
                             ],
                             [
-                                18.417571,
-                                -33.916111
+                                18.41757,
+                                -33.91611
                             ],
                             [
-                                18.418382,
-                                -33.915638
+                                18.41838,
+                                -33.91563
                             ],
                             [
                                 18.41822,
@@ -1273,6 +1287,7 @@ This request will exclude unneeded information on all contained stop, line and f
                 {
                     "href": "https://platform.whereismytransport.com/api/journeys/uvRvS486sUODiqZyAK-j2g/itineraries/fLdmWzq_h0-uoqZyAK-keQ/legs/1",
                     "type": "Transit",
+					"behaviour": "Static",
                     "distance": {
                         "value": 872,
                         "unit": "m"
@@ -1372,14 +1387,14 @@ This request will exclude unneeded information on all contained stop, line and f
                             ],
                             [
                                 18.41568,
-                                -33.9115
+                                -33.91151
                             ],
                             [
                                 18.41458,
                                 -33.91051
                             ],
                             [
-                                18.4131,
+                                18.41311,
                                 -33.90922
                             ]
                         ]
@@ -1408,8 +1423,8 @@ This request will exclude unneeded information on all contained stop, line and f
                                 "geometry": {
                                     "type": "Point",
                                     "coordinates": [
-                                        18.412,
-                                        -33.908
+                                        18.41201,
+                                        -33.90801
                                     ]
                                 }
                             },
@@ -1421,36 +1436,36 @@ This request will exclude unneeded information on all contained stop, line and f
                         "type": "LineString",
                         "coordinates": [
                             [
-                                18.4131,
+                                18.41311,
                                 -33.90922
                             ],
                             [
                                 18.413117,
-                                -33.9092
+                                -33.90921
                             ],
                             [
-                                18.412888,
-                                -33.909003
+                                18.41288,
+                                -33.90900
                             ],
                             [
-                                18.413034,
-                                -33.908861
+                                18.41303,
+                                -33.90886
                             ],
                             [
-                                18.412872,
-                                -33.908729
+                                18.41287,
+                                -33.90872
                             ],
                             [
-                                18.412626,
-                                -33.908619
+                                18.41262,
+                                -33.90861
                             ],
                             [
-                                18.412706,
-                                -33.908541
+                                18.41270,
+                                -33.90854
                             ],
                             [
-                                18.411984,
-                                -33.908015
+                                18.41198,
+                                -33.90801
                             ]
                         ]
                     },
@@ -1490,8 +1505,8 @@ This request will exclude unneeded information on all contained stop, line and f
 
 | Attribute | Type | Description |
 | :--------- | :--- | :---- |
-| id | [identifier](#identifiers) | The identifier of the itinerary. |
-| href | [hyperlink](#resource-linking) | The hyperlink to this resource. |
+| id | [Identifier](#identifiers) | The identifier of the itinerary. |
+| href | [Hyperlink](#resource-linking) | The hyperlink to this resource. |
 | departureTime | [DateTime](#datetime) | The departure date and time for the itinerary. |
 | arrivalTime | [DateTime](#datetime) | The arrival date and time for the itinerary. |
 | distance | [Distance](#distance) | If available, the total distance of the itinerary. |
@@ -1501,6 +1516,8 @@ This request will exclude unneeded information on all contained stop, line and f
 #### Retrieving a specific itinerary
 
 To retrieve a specific itinerary for a previously created journey, the following resource can be requested.
+
+**Note:** GET requests for any journey or its itineraries are only available for up to 30 days. Requesting past this period will result in a **404 Not Found** [status code](https://developer.whereismytransport.com/documentation#http-status-codes).
 
 `GET api/journeys/{journeyId}/itineraries/{itineraryId}`
 
@@ -1527,11 +1544,20 @@ A _Walking_ leg is one which the passenger is to travel by foot from one waypoin
 
 A _Transit_ leg is one which uses a public transportation service based on scheduled or absolute frequency-based stop times.
 
+#### Leg behaviour
+
+Transit legs may have one of currently two different behaviours, which could be considered sub-types of Transit legs.
+
+A _Static_ leg is one where the given times are from a frequency-based or static timetable, where the intention is that the vehicle stops at the time given in the waypoint. Whether the vehicle adheres to this time in reality can still be dependent on delays or other external factors.
+
+An _Estimated_ leg is one where the given times are an estimate based on the probability of a vehicle arriving at or before that time to a reasonable confidence level. Estimated legs result from travel on a route without exact times nor formal timetables.
+
 #### Leg response model
 
 | Field | Type | Description |
 | :--------- | :--- | :---- |
 | type | string | The [type of leg](#types-of-legs), either _Walking_ or _Transit_. |
+| behaviour | string | The [leg behaviour](#leg-behaviour), either _Static_ or _Estimated_. |
 | distance | [Distance](#distance) | If available, the total distance of the leg. |
 | duration | integer | If available, the total duration of the leg in seconds. |
 | line | [Line](#line-response-model) | **[**[Excludable](#excluding-data)**]** The line that is used on this leg of the itinerary. This is only returned for _Transit_ legs. |
@@ -1541,53 +1567,16 @@ A _Transit_ leg is one which uses a public transportation service based on sched
 | directions | Array of [Direction](#direction-response-model) | **[**[Excludable](#excluding-data)**]** If available, the directions to take in order to complete the leg. |
 | geometry | [GeoJSON](#geojson) LineString | **[**[Excludable](#excluding-data)**]** If available, the geographic shape of the leg. |
 
-#### Retrieving a specific leg
 
-##### Sample request
+#### Pickup and Drop Off Type
 
-Retrieving an itinerary's leg can be done using the index of that leg as it exists in the itinerary. The index begins counting from 1.
+A waypoint may have pickup and drop off types. These types are independent of each other; a vehicle may pick up passengers but not drop them off and vice versa.
 
-```
-GET api/journeys/PEP5VsjJ6kuo6KZxAQjq2Q/itineraries/5CxmV36Blk6n6qZxAQjrdQ/legs/2?exclude=stop,line,geometry,directions
-```
+No value indicates that the vehicle may pick up (or drop off) passengers at this waypoint.
 
-##### Sample response
+A value of _Never_ indicates that the vehicle does not pick up (or drop off) passengers at this waypoint.
 
-```
-200 Ok
-{
-    "href": "https://platform.whereismytransport.com/api/journeys/PEP5VsjJ6kuo6KZxAQjq2Q/itineraries/5CxmV36Blk6n6qZxAQjrdQ/legs/2",
-    "type": "Transit",
-    "distance": {
-        "value": 8554,
-        "unit": "m"
-    },
-    "duration": 1200,
-    "line": {
-        "id": "yGZHGrc3sUOhNFLoer-Z_g",
-        "href": "https://platform.whereismytransport.com/api/lines/yGZHGrc3sUOhNFLoer-Z_g"
-    },
-    "vehicle": {},
-    "waypoints": [
-        {
-            "stop": {
-                "id": "McWcQewKAUCZbluWHQk5kQ",
-                "href": "https://platform.whereismytransport.com/api/stops/McWcQewKAUCZbluWHQk5kQ"
-            },
-            "arrivalTime": "2016-08-29T17:00:00Z",
-            "departureTime": "2016-08-29T17:00:00Z"
-        },
-        {
-            "stop": {
-                "id": "C5UPegWudUa0h8LSSsVvrg",
-                "href": "https://platform.whereismytransport.com/api/stops/C5UPegWudUa0h8LSSsVvrg"
-            },
-            "arrivalTime": "2016-08-29T17:20:00Z",
-            "departureTime": "2016-08-29T17:20:00Z"
-        }
-    ]
-}
-```
+A value of _OnRequest_ indicates that the passenger must specially arrange to be picked up (or dropped off) at this waypoint, such as by phone or by coordinating with the driver.
 
 #### Waypoint response model
 
@@ -1597,8 +1586,11 @@ A waypoint is a stopping point along an itinerary. It has either an arrival date
 | :--------- | :--- | :---- |
 | arrivalTime | [DateTime](#datetime) | The arrival date and time at this point of a leg. |
 | departureTime | [DateTime](#datetime) | The departure date and time from this point of a leg. |
-| stop | [Stop](#stop-response-model) | **[**[Excludable](#excluding-data)**]** The stop of the waypoint. This can be returned in either _Walking_ or _Transit_ legs. |
-| location | [Location](#location-response-model) | The location of the waypoint if it is not a stop. This can be returned only in  Walking legs. |
+| stop | [Stop](#stop-response-model) | **[**[Excludable](#excluding-data)**]** If this waypoint represents a stop, the stop of this waypoint. This can be returned in either _Walking_ or _Transit_ legs. |
+| pickupType | [PickupAndDropOffType](#pickup-and-drop-off-type) | If this waypoint represents a stop, whether the vehicle will pick up passengers at this waypoint. This can be returned in either _Walking_ or _Transit_ legs. |
+| dropOffType | [PickupAndDropOffType](#pickup-and-drop-off-type) | If this waypoint represents a stop, whether the vehicle will pick up passengers at this waypoint. This can be returned in either _Walking_ or _Transit_ legs. |
+| hail | [Hail](#hail-response-model) | If this waypoint represents a location where you hail a vehicle to board or notify the driver that you want to alight. This can be returned in either _Walking_ or _Transit_ legs. |
+| location | [Location](#location-response-model) | If this waypoint represents a walking leg start or end, the location of this waypoint. This can be returned only in _Walking_ legs that are at the start or end of a journey. |
 
 #### Vehicle response model
 
@@ -1626,6 +1618,12 @@ If available, the directions to follow in order to get from the start to the end
 | address | string | The reverse geocoded address of the point, if available. |
 | geometry | [GeoJSON](#geojson) Point | The geographic point of the location. |
 
+#### Hail response model
+
+| Field | Type | Description |
+| :--------- | :--- | :---- |
+| geometry | [GeoJSON](#geojson) Point | The geographic point of the location. |
+
 ### Fares
 
 A fare is the cost incurred by a commuter when using a transport service.  Essentially, it is the price associated with a journey's itinerary for a particular fare product or set of fare products.
@@ -1645,19 +1643,19 @@ When creating a new journey, the default [fare product](#fare-products) will be 
 
 ##### Sample request
 
-```
+```json
 POST api/journeys
 {
     "geometry": {
         "type": "MultiPoint",
         "coordinates": [
             [
-                18.422,
-                -33.922
+                18.42201,
+                -33.92201
             ],
             [
-                18.473,
-                -33.966
+                18.47301,
+                -33.96601
             ]
         ]
     },
@@ -1678,7 +1676,7 @@ A fare product is a fare scheme offered to passengers by an agency and will deci
 | Field | Type | Description |
 | :--------- | :--- | :---- |
 | id | [Identifier](#identifiers) | The identifier of the fare product. |
-| href | [hyperlink](#resource-linking) | The hyperlink to this resource. |
+| href | [Hyperlink](#resource-linking) | The hyperlink to this resource. |
 | agency | [Agency](#agency-response-model) | **[**[Excludable](#excluding-data)**]** The fare product's agency. |
 | name | string | The commuter-friendly name of the fare product. |
 | isDefault | bool | Flag specifying whether this is the default fare product for this agency. |
@@ -1705,7 +1703,7 @@ GET api/fareproducts?agencies=5kcfZkKW0ku4Uk-A6j8MFA&limit=2
 
 ##### Sample response
 
-```
+```json
 200 Ok
 [
     {
@@ -1735,4 +1733,39 @@ GET api/fareproducts?agencies=5kcfZkKW0ku4Uk-A6j8MFA&limit=2
         "description": "Unlimited travel on any day and at any time and are valid for one month from a start date of your choice."
     }
 ]
+```
+
+#### Retrieving a specific fare product
+
+Retrieves a fare product by its identifier.
+
+`GET api/fareproducts/{id}`
+
+| Parameter | Type | Description |
+| :-------------- | :--- | :---- |
+| id | [Identifier](#identifiers) | The identifier of the fare product. |
+
+##### Sample request
+
+```
+GET api/fareproducts/pCawiJA73UmchaZtAKAHwg
+```
+
+##### Sample response
+
+```json
+200 Ok
+{
+    "id":"pCawiJA73UmchaZtAKAHwg",
+    "href":"https://platform.whereismytransport.com/api/fareproducts/pCawiJA73UmchaZtAKAHwg",
+    "agency":{
+        "id":"5kcfZkKW0ku4Uk-A6j8MFA",
+        "href":"https://platform.whereismytransport.com/api/agencies/5kcfZkKW0ku4Uk-A6j8MFA",
+        "name":"MyCiTi",
+        "culture":"en"
+    },
+    "name":"Monthly Pass",
+    "isDefault":false,
+    "description":"Unlimited travel on any day and at any time and are valid for one month from a start date of your choice excluding the Airport."
+}
 ```
