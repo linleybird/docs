@@ -240,9 +240,9 @@ In order to reduce payload, it is possible to exclude certain objects or collect
 
 When excluding resource objects, the containing object with their **id** and **href** fields will remain. This is to preserve discoverability while still reducing payload. Collections, on the other hand, will be excluded entirely.
 
-##### Sample request
-
 The request below will exclude **geometry** and **directions** from the response model.
+
+##### Sample request
 
 ```
 POST api/journeys?exclude=geometry,directions
@@ -263,9 +263,10 @@ Collection endpoints are paginated so to ensure that responses are easier to han
 | limit | integer | The number of entities to be returned. The default and maximum is typically 100 unless otherwise specified. |
 | offset | integer | The zero-based offset of the first entity returned. The default is always 0.  |
 
-##### Sample request
 
 The request below will retrieve 10 stops from the 50th stop onwards.
+
+##### Sample request
 
 ```
 GET api/stops?limit=10&offset=50
@@ -297,9 +298,9 @@ The detailed specification can be found [here](https://www.ietf.org/rfc/rfc4646.
 
 Monetary amounts are represented by the cost object, which is made up of an amount, as a decimal value, and the applicable currency code. The currency code is such as defined in ISO 4217. For example, **ZAR** represents the South African Rand. More information and a full list of currency codes can be found [here](https://en.wikipedia.org/wiki/ISO_4217).
 
-##### Sample
-
 The following cost object represents the value of R10,50.
+
+##### Sample
 
 ```json
 {
@@ -318,9 +319,9 @@ A typical GeoJSON structure consists of a **type** field and an array of **coord
 
 **Note:**  GeoJSON represents geographic coordinates with longitude first and then latitude, `[longitude, latitude]`. i.e. `[x, y]` in the Cartesian coordinate system.
 
-##### Sample
-
 The following GeoJSON Point represents the coordinates for Cape Town's city centre.
+
+##### Sample
 
 ```json
 {
@@ -344,7 +345,7 @@ In order to provide a geographic position through the query string, a comma-sepa
 GET api/stops?point=-33.92543,18.43644
 ```
 
-**Note: ** The ordering of these two coordinates is latitude first and then longitude.
+**Note:** The ordering of these two coordinates is latitude first and then longitude.
 
 #### BoundingBox
 
@@ -784,9 +785,9 @@ Event type can either be **Departure** or **Arrival**.
 GET api/stops/eBTeYLPXOkWm5zyfjZVaZg/timetables?limit=2
 ```
 
-##### Sample response
+This request below will retrieve timetable information for stop with identifier **eBTeYLPXOkWm5zyfjZVaZg**, limiting it to two items.
 
-This request will retrieve timetable information for stop with identifier **eBTeYLPXOkWm5zyfjZVaZg**, limiting it to two items.
+##### Sample response
 
 ```json
 200 Ok
@@ -1141,9 +1142,9 @@ POST api/journeys?exclude=line,stop,fareProduct
 }
 ```
 
-##### Sample response
+The folloing request will exclude unneeded information on all contained stop, line and fare product resources in order to reduce the payload.
 
-This request will exclude unneeded information on all contained stop, line and fare product resources in order to reduce the payload.
+##### Sample response
 
 ```json
 201 Created
@@ -1553,7 +1554,6 @@ An _Estimated_ leg is one where the given times are an estimate based on the pro
 | waypoints | Array of [Waypoint](#waypoint-response-model) | **[**[Excludable](#excluding-data)**]** The sequence of ordered waypoints that make up this leg. |
 | directions | Array of [Direction](#direction-response-model) | **[**[Excludable](#excluding-data)**]** If available, the directions to take in order to complete the leg. |
 | geometry | [GeoJSON](#geojson) LineString | **[**[Excludable](#excluding-data)**]** If available, the geographic shape of the leg. |
-
 
 #### Pickup and Drop Off Type
 
