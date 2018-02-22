@@ -170,7 +170,7 @@ The **error response model** below will be returned for any error.
 
 ### Identifiers
 
-Almost all resources in the API are identified through the use of a globally unique identifier. This identifier is specified as a 22 character long, case-sensitive string of URL-friendly characters; __a__ to __z__, __A__ to __Z__, __0__ to __9__, - (hyphen) and _ (underscore). See the **id** field in the sample response below.
+Almost all resources in the API are identified through the use of a globally unique identifier. This identifier is specified as a 22 character long, case-sensitive string of URL-friendly characters; __a__ to __z__, __A__ to __Z__, __0__ to __9__, - (hyphen) and _ (underscore). See the **id** field in the samples below.
 
 ##### Sample request
 
@@ -522,9 +522,9 @@ Retrieves a collection of stops.
 GET api/stops?agencies=5kcfZkKW0ku4Uk-A6j8MFA,xp_eNbqkYEaZP2YZkHwQqg&point=-33.92301,18.42101&radius=500
 ```
 
-##### Sample response
-
 This request will retrieve stops from either agency **5kcfZkKW0ku4Uk-A6j8MFA** or **xp_eNbqkYEaZP2YZkHwQqg** and which are within 500 metres of the point [-33.923, 18.421].
+
+##### Sample response
 
 ```json
 200 Ok
@@ -611,9 +611,9 @@ Retrieves a stop by its identifier.
 GET api/stops/eBTeYLPXOkWm5zyfjZVaZg?exclude=agency
 ```
 
-##### Sample response
-
 This request will retrieve the stop resource and exclude unneeded **agency** fields.
+
+##### Sample response
 
 ```json
 200 Ok
@@ -776,7 +776,6 @@ Retrieves a timetable for a stop, consisting of a list of occurrences of a vehic
 Event type can either be **Departure** or **Arrival**.
 
 **Departure** specifies that departing timetables are returned.
-
 **Arrival** specifies that arriving timetables are returned.
 
 ##### Sample request
@@ -785,7 +784,7 @@ Event type can either be **Departure** or **Arrival**.
 GET api/stops/eBTeYLPXOkWm5zyfjZVaZg/timetables?limit=2
 ```
 
-This request below will retrieve timetable information for stop with identifier **eBTeYLPXOkWm5zyfjZVaZg**, limiting it to two items.
+This request will retrieve timetable information for stop with identifier **eBTeYLPXOkWm5zyfjZVaZg**, limiting it to two items.
 
 ##### Sample response
 
@@ -1093,7 +1092,6 @@ Creating a new journey is done by posting the journey's criteria to the resource
 Time type can either be **DepartAfter** or **ArriveBefore**.
 
 **DepartAfter** (the default) indicates that the journey must be calculated to depart after the specified time, at the earliest.
-
 **ArriveBefore** indicates that the journey must be calculated to arrive before the specified time, at the latest.
 
 #### Profile
@@ -1101,7 +1099,6 @@ Time type can either be **DepartAfter** or **ArriveBefore**.
 The profile specifies how the itineraries should be prioritised.
 
 **ClosestToTime** (the default) returns itineraries absolutely closest to the requested date; earliest for **DepartAfter**, and latest for **ArriveBefore**.
-
 **FewestTransfers** returns itineraries with fewest connections between transport vehicles, and then also prioritising by closest to time.
 
 #### Filter
