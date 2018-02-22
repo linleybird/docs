@@ -97,8 +97,7 @@ Using client credentials one can make requests against the _security token servi
 
 #### Security token endpoint
 
-The following is the full URL endpoint used to retrieve a token.
-`https://identity.whereismytransport.com/connect/token`
+The following is the full URL endpoint used to retrieve a token.   `https://identity.whereismytransport.com/connect/token`
 
 ##### Sample request
 
