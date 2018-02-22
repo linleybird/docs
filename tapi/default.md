@@ -1506,7 +1506,7 @@ To retrieve a specific itinerary for a previously created journey, the following
 `GET api/journeys/{journeyId}/itineraries/{itineraryId}`
 
 | Parameter | Type | Description |
-| :-------------- | :--- | :--- | :---- |
+| :-------------- | :--- | :--- |
 | journeyId | [Identifier](#identifiers) | The identifier of the journey. |
 | itineraryId | [Identifier](#identifiers) | The identifier of the itinerary. |
 
