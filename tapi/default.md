@@ -8,7 +8,8 @@ Central to the WhereIsMyTransport platform is our transport API. It is based on 
 
 #### API endpoint
 
-The following address is the standard URL endpoint to be used to access the various resources of the API.   `https://platform.whereismytransport.com`
+The following address is the standard URL endpoint to be used to access the various resources of the API.   
+`https://platform.whereismytransport.com`
 
 For example, the [agencies endpoint](#agencies) would be queried at https://platform.whereismytransport.com/api/agencies.
 
@@ -97,7 +98,8 @@ Using client credentials one can make requests against the _security token servi
 
 #### Security token endpoint
 
-The following is the full URL endpoint used to retrieve a token.   `https://identity.whereismytransport.com/connect/token`
+The following is the full URL endpoint used to retrieve a token.   
+`https://identity.whereismytransport.com/connect/token`
 
 ##### Sample request
 
@@ -406,8 +408,7 @@ An agency, or operator, is an organisation which provides and governs a transpor
 
 #### Retrieving agencies
 
-Retrieves a collection of agencies.
-
+Retrieves a collection of agencies.   
 `GET api/agencies?point={Point}&radius={int}&bbox={BoundingBox}&agencies={Identifiers}&limit={int}&offset={int}`
 
 | Parameter | Type | Description |
@@ -454,8 +455,7 @@ GET api/agencies?bbox=-33.93901,18.39801,-33.92101,18.44301
 
 #### Retrieving a specific agency
 
-Retrieves an agency by its identifier.
-
+Retrieves an agency by its identifier.   
 `GET api/agencies/{id}`
 
 | Parameter | Type | Description |
@@ -499,8 +499,7 @@ A location where passengers can board or alight from a transport vehicle.
 
 #### Retrieving stops
 
-Retrieves a collection of stops.
-
+Retrieves a collection of stops.   
 `GET api/stops?point={Point}&radius={int}&bbox={BoundingBox}&modes={Modes}&agencies={Identifiers}&servesLines={Identifiers}&limit={int}&offset={int}`
 
 | Parameter | Type | Description |
@@ -598,8 +597,7 @@ This request will retrieve stops from either agency **5kcfZkKW0ku4Uk-A6j8MFA** o
 
 #### Retrieving a specific stop
 
-Retrieves a stop by its identifier.
-
+Retrieves a stop by its identifier.   
 `GET api/stops/{id}`
 
 | Parameter | Type | Description |
@@ -641,8 +639,7 @@ This request will retrieve the stop resource and exclude unneeded **agency** fie
 
 #### Retrieving child stops for some parent stop
 
-Retrieves all children of the parent stop specified by its identifier.
-
+Retrieves all children of the parent stop specified by its identifier.   
 `GET api/stops/{id}/stops`
 
 | Parameter | Type | Description |
@@ -760,8 +757,7 @@ A timetable of vehicles arriving and departing from a stop along their respectiv
 
 #### Retrieving a stop timetable
 
-Retrieves a timetable for a stop, consisting of a list of occurrences of a vehicle calling at this stop in order of arrival time.
-
+Retrieves a timetable for a stop, consisting of a list of occurrences of a vehicle calling at this stop in order of arrival time.   
 `GET api/stops/{id}/timetables?earliestArrivalTime={DateTime}&latestArrivalTime={DateTime}&eventType={EventType}&limit={int}&offset={int}`
 
 | Parameter | Type | Description |
@@ -860,8 +856,7 @@ A grouping together of routes marketed to passengers as a single section of the 
 
 #### Retrieving lines
 
-Retrieves a collection of lines.
-
+Retrieves a collection of lines.   
 `GET api/lines?agencies={Identifiers}&servesStops={Identifiers}&limit={int}&offset={int}`
 
 | Parameter | Type | Description |
@@ -920,8 +915,7 @@ GET api/lines?agencies=5kcfZkKW0ku4Uk-A6j8MFA&limit=2
 
 #### Retrieving a specific line
 
-Retrieves a line by its identifier.
-
+Retrieves a line by its identifier.   
 `GET api/lines/{id}`
 
 | Parameter | Type | Description |
@@ -967,8 +961,7 @@ A timetable of vehicles travelling on a line.
 
 #### Retrieving a line timetable
 
-Retrieves a timetable for a line, consisting of a list of departures on this line in order of departure time.
-
+Retrieves a timetable for a line, consisting of a list of departures on this line in order of departure time.   
 `GET api/lines/{id}/timetables?earliestDepartureTime={DateTime}&latestDepartureTime={DateTime}&departureStopId={stop}&arrivalStopId={stop}&limit={int}&offset={int}`
 
 | Parameter | Type | Notes |
@@ -1080,8 +1073,7 @@ A journey is the traveling of a passenger from a departure point to an arrival p
 
 #### Creating a journey
 
-Creating a new journey is done by posting the journey's criteria to the resource.
-
+Creating a new journey is done by posting the journey's criteria to the resource.   
 `POST api/journeys`
 
 | Field | Type | Required | Description |
@@ -1513,8 +1505,7 @@ This request will exclude unneeded information on all contained stop, line and f
 
 To retrieve a specific itinerary for a previously created journey, the following resource can be requested.
 
-**Note:** GET requests for any journey or its itineraries are only available for up to 30 days. Requesting past this period will result in a **404 Not Found** [status code](https://developer.whereismytransport.com/documentation#http-status-codes).
-
+**Note:** GET requests for any journey or its itineraries are only available for up to 30 days. Requesting past this period will result in a **404 Not Found** [status code](https://developer.whereismytransport.com/documentation#http-status-codes).   
 `GET api/journeys/{journeyId}/itineraries/{itineraryId}`
 
 | Parameter | Type | Description |
@@ -1680,8 +1671,7 @@ A fare product is a fare scheme offered to passengers by an agency and will deci
 
 #### Retrieving fare products
 
-Retrieves a collection of fare products.
-
+Retrieves a collection of fare products.   
 `GET api/fareproducts?agencies={Identifiers}&limit={int}&offset={int}`
 
 | Parameter | Type | Description |
@@ -1733,8 +1723,7 @@ GET api/fareproducts?agencies=5kcfZkKW0ku4Uk-A6j8MFA&limit=2
 
 #### Retrieving a specific fare product
 
-Retrieves a fare product by its identifier.
-
+Retrieves a fare product by its identifier.   
 `GET api/fareproducts/{id}`
 
 | Parameter | Type | Description |
