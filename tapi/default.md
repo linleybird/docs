@@ -652,10 +652,9 @@ Retrieves all children of the parent stop specified by its identifier.
 ```
 GET api/stops/E8qYuZ4nEUSLS13pskx1Qg/stops
 ```
+This request will retrieve all child stops of the stop with identifier **E8qYuZ4nEUSLS13pskx1Qg**.
 
 ##### Sample response
-
-This request will retrieve all child stops of the stop with identifier **E8qYuZ4nEUSLS13pskx1Qg**.
 
 ```json
 200 Ok
@@ -775,7 +774,7 @@ Retrieves a timetable for a stop, consisting of a list of occurrences of a vehic
 
 Event type can either be **Departure** or **Arrival**.
 
-**Departure** specifies that departing timetables are returned.
+**Departure** specifies that departing timetables are returned.   
 **Arrival** specifies that arriving timetables are returned.
 
 ##### Sample request
@@ -1091,14 +1090,14 @@ Creating a new journey is done by posting the journey's criteria to the resource
 
 Time type can either be **DepartAfter** or **ArriveBefore**.
 
-**DepartAfter** (the default) indicates that the journey must be calculated to depart after the specified time, at the earliest.
+**DepartAfter** (the default) indicates that the journey must be calculated to depart after the specified time, at the earliest.   
 **ArriveBefore** indicates that the journey must be calculated to arrive before the specified time, at the latest.
 
 #### Profile
 
 The profile specifies how the itineraries should be prioritised.
 
-**ClosestToTime** (the default) returns itineraries absolutely closest to the requested date; earliest for **DepartAfter**, and latest for **ArriveBefore**.
+**ClosestToTime** (the default) returns itineraries absolutely closest to the requested date; earliest for **DepartAfter**, and latest for **ArriveBefore**.   
 **FewestTransfers** returns itineraries with fewest connections between transport vehicles, and then also prioritising by closest to time.
 
 #### Filter
