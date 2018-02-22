@@ -8,9 +8,7 @@ Central to the WhereIsMyTransport platform is our transport API. It is based on 
 
 #### API endpoint
 
-The following address is the standard URL endpoint to be used to access the various resources of the API.
-
-`https://platform.whereismytransport.com`
+The following address is the standard URL endpoint to be used to access the various resources of the API.   `https://platform.whereismytransport.com`
 
 For example, the [agencies endpoint](#agencies) would be queried at https://platform.whereismytransport.com/api/agencies.
 
