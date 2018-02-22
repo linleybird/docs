@@ -280,7 +280,7 @@ A typical format for encoding of date and time in JSON is to use the ISO 8601 st
 
 ISO 8601 date and time strings can be represented as "2016-11-19T07:22Z" (7:22 AM on the 19th November 2016).
 
-More information can be found [here](https://en.wikipedia.org/wiki/ISO_8601).
+Find out more about the [ISO 8601 standard](https://en.wikipedia.org/wiki/ISO_8601).
 
 Acceptable DateTime input values are limited to between 1 day in the past and 6 days in the future. This allows the user to query on any day of the week, but it should be remembered that public holidays, schedule changes and daylight savings time changes might mean that results for the same day might differ from week to week. Supplying a DateTime that exceeds this limitation will result in a **400 Bad Request** [status code](#http-status-codes) response. In the case of a default that falls outside this limitation, the default will use the limitation value.
 
@@ -292,11 +292,11 @@ The appropriate culture format used in the API is based on RFC 4646. This unique
 
 For example, _en-US_ refers to English (United States) and _en-ZA_ to English (South Africa).
 
-The detailed specification can be found [here](https://www.ietf.org/rfc/rfc4646.txt).
+Read the detailed [RFC 4646 specification](https://www.ietf.org/rfc/rfc4646.txt).
 
 #### Cost
 
-Monetary amounts are represented by the cost object, which is made up of an amount, as a decimal value, and the applicable currency code. The currency code is such as defined in ISO 4217. For example, **ZAR** represents the South African Rand. More information and a full list of currency codes can be found [here](https://en.wikipedia.org/wiki/ISO_4217).
+Monetary amounts are represented by the cost object, which is made up of an amount, as a decimal value, and the applicable currency code. The currency code is such as defined in ISO 4217. For example, **ZAR** represents the South African Rand. Visit the [full list of currency codes](https://en.wikipedia.org/wiki/ISO_4217) and find out more information.
 
 The following cost object represents the value of R10,50.
 
