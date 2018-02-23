@@ -4,7 +4,7 @@
 
 Central to the WhereIsMyTransport platform is our transport API. It is based on [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer), [JSON](http://www.json.org/), [OAuth 2.0](http://oauth.net/2/) and [OpenID Connect](http://openid.net/connect/). These are standards which are broadly supported in the industry.
 
-<span class="article">
+<article>
 	
 ### Introduction
 
@@ -90,7 +90,7 @@ Content-Type: application/json
 
 All API access is performed over HTTPS only. If a resource is requested using **http://** then a **403 Forbidden** [status code](#http-status-codes) will be returned.
 
-</span>
+</article>
 
 ### Authorisation
 
