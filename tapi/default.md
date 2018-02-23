@@ -296,7 +296,7 @@ Read the detailed [RFC 4646 specification](https://www.ietf.org/rfc/rfc4646.txt)
 
 #### Cost
 
-Monetary amounts are represented by the cost object, which is made up of an amount, as a decimal value, and the applicable currency code. The currency code is such as defined in ISO 4217. For example, **ZAR** represents the South African Rand. Visit the [full list of currency codes](https://en.wikipedia.org/wiki/ISO_4217) and find out more information.
+Monetary amounts are represented by the cost object, which is made up of an amount, as a decimal value, and the applicable currency code. The currency code is such as defined in ISO 4217. For example, **ZAR** represents the South African Rand. Visit the [full list of currency codes](https://en.wikipedia.org/wiki/ISO_4217) to find out more information.
 
 The following cost object represents the value of R10,50.
 
@@ -1138,7 +1138,7 @@ POST api/journeys?exclude=line,stop,fareProduct
 }
 ```
 
-The folloing request will exclude unneeded information on all contained stop, line and fare product resources in order to reduce the payload.
+The following request will exclude unneeded information on all contained stop, line and fare product resources in order to reduce the payload.
 
 ##### Sample response
 
