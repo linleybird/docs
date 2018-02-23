@@ -4,7 +4,7 @@
 
 Central to the WhereIsMyTransport platform is our transport API. It is based on [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer), [JSON](http://www.json.org/), [OAuth 2.0](http://oauth.net/2/) and [OpenID Connect](http://openid.net/connect/). These are standards which are broadly supported in the industry.
 
-<article>
+<span class="article">
 ### Introduction
 
 #### API endpoint
@@ -89,6 +89,8 @@ Content-Type: application/json
 
 All API access is performed over HTTPS only. If a resource is requested using **http://** then a **403 Forbidden** [status code](#http-status-codes) will be returned.
 
+</span>
+
 ### Authorisation
 
 The API uses the standards as set in the [OAuth 2.0](http://oauth.net/2/) and [OpenID Connect](http://openid.net/connect/) specifications. WhereIsMyTransport provides its own _security token service_ which issues tokens to applications so that they can authenticate themselves against the API. To authorise an application, one must first acquire a **client_id** and **client_secret** from the [Developer Portal](https://developer.whereismytransport.com).
@@ -138,8 +140,6 @@ A **401 Unauthorized** [status code](#http-status-codes) will be returned if the
 #### Token expiry
 
 The token response model will also contain a field called **expires_in**. This field denotes how long the token will be fresh since the token was issued (in seconds). After this period elapses that very token will become stale, and a new token will need to be retreived from the security token endpoint.
-
-</article>
 
 ### Errors
 
